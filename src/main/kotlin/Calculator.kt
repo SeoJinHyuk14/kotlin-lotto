@@ -1,6 +1,9 @@
 class Calculator {
 
     fun calculate(formula: String): Int {
+        if (formula.isBlank()) {
+            return 0
+        }
         val numbers = formulaParser(formula)
 
         return numbers.sum()
@@ -8,14 +11,14 @@ class Calculator {
 
     private fun formulaParser(formula: String): List<Int> {
         val result = REGEX.find(formula)
-        return result?.let {
+        val tokens = result?.let {
             val customDelimiter = it.groupValues[1]
-            val tokens = it.groupValues[2].split(customDelimiter)
-            parseToInt(tokens)
+            it.groupValues[2].split(customDelimiter)
         } ?: run {
-            val tokens = formula.split(*DEFAULT_DELIMITER)
-            parseToInt(tokens)
+            formula.split(*DEFAULT_DELIMITER)
         }
+
+        return parseToInt(tokens)
     }
 
     private fun parseToInt(tokens: List<String>): List<Int> {
